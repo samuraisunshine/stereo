@@ -71,6 +71,7 @@
   #dropHint .big{font-size:19px;color:var(--ink);font-weight:600}
   #dropHint .sub{font-size:14px;max-width:440px;line-height:1.5}
   #dropHint.hide{display:none}
+  #dropHint #hintEmpty,#dropHint #hintReady{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
   .ghost-btn{border:1px solid var(--panel-edge);background:var(--panel);color:var(--ink);
     padding:11px 20px;border-radius:var(--r);font-size:14px;cursor:pointer;transition:.2s}
   .ghost-btn:hover{border-color:var(--accent);background:var(--accent-soft)}
@@ -134,6 +135,8 @@
   .mini-btn{border:1px solid var(--panel-edge);background:var(--bg-2);color:var(--ink);padding:8px 13px;
     border-radius:8px;font-size:12px;cursor:pointer;transition:.2s}
   .mini-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .mini-btn.accent{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  .mini-btn.accent:hover{background:#4a7ad8;border-color:#4a7ad8;color:#fff}
   .thumbs{display:flex;gap:6px;flex-wrap:wrap;max-height:54px;overflow:hidden}
   .thumb{width:42px;height:42px;border-radius:7px;border:1px solid var(--panel-edge);
     background:#000 center/contain no-repeat;cursor:pointer;flex:0 0 auto}
@@ -168,10 +171,16 @@
   </div>
 
   <div id="dropHint">
-    <div class="big" data-i18n="dropBig">Загрузите картинки для тренировки</div>
-    <div class="sub" data-i18n="dropSub">PNG или JPG — цветные рисунки с чёрным контуром или чёрно-белый лайн-арт. Программа сама обведёт, раскрасит в два цвета под очки и будет разводить по экрану.</div>
-    <button class="ghost-btn" id="loadBtn" data-i18n="dropBtn">Выбрать картинки</button>
-    <div class="sub" style="font-size:12px" data-i18n="dropDrag">Можно перетащить файлы сюда</div>
+    <div id="hintEmpty">
+      <div class="big" data-i18n="dropBig">Загрузите картинки для тренировки</div>
+      <div class="sub" data-i18n="dropSub">PNG или JPG — цветные рисунки с чёрным контуром или чёрно-белый лайн-арт. Программа сама обведёт, раскрасит в два цвета под очки и будет разводить по экрану.</div>
+      <button class="ghost-btn" id="loadBtn" data-i18n="dropBtn">Выбрать картинки</button>
+      <div class="sub" style="font-size:12px" data-i18n="dropDrag">Можно перетащить файлы сюда</div>
+    </div>
+    <div id="hintReady" style="display:none">
+      <div class="big" data-i18n="readyBig">Для начала тренировки установите время и нажмите запуск</div>
+      <div class="sub" data-i18n="readySub">Наденьте красно-синие очки, при необходимости настройте время и скорость в панели внизу.</div>
+    </div>
   </div>
 
   <button id="togglePanel" title="Скрыть / показать панель (H)">
@@ -226,8 +235,8 @@
       <div class="group grow" style="align-self:center">
         <label class="check"><input type="checkbox" id="chkLoopPic" checked> Менять картинки автоматически</label>
         <div class="seg" id="segOrder" style="margin-top:6px">
-          <button data-v="order" class="active" data-i18n="segOrder">По порядку</button>
-          <button data-v="random" data-i18n="segRandom">Случайно</button>
+          <button data-v="order" data-i18n="segOrder">По порядку</button>
+          <button data-v="random" class="active" data-i18n="segRandom">Случайно</button>
         </div>
       </div>
     </div>
@@ -265,7 +274,7 @@
       <div class="group">
         <label data-i18n="lblImages">Картинки</label>
         <div class="file-btns">
-          <button class="mini-btn" id="addBtn" data-i18n="btnAdd">+ Добавить</button>
+          <button class="mini-btn accent" id="addBtn" data-i18n="btnAdd">+ Добавить</button>
           <button class="mini-btn" id="prevBtn" data-i18n="btnPrev">‹ Пред.</button>
           <button class="mini-btn" id="nextBtn" data-i18n="btnNext">След. ›</button>
           <button class="mini-btn" id="clearBtn" data-i18n="btnClear">Очистить</button>
@@ -321,8 +330,8 @@
       <div class="group">
         <label data-i18n="lblFigChange">Смена фигуры</label>
         <div class="seg" id="sgOrder">
-          <button data-v="order" class="active">По порядку</button>
-          <button data-v="random">Случайно</button>
+          <button data-v="order" data-i18n="segOrder">По порядку</button>
+          <button data-v="random" class="active" data-i18n="segRandom">Случайно</button>
         </div>
       </div>
       <div class="group grow">
@@ -426,6 +435,7 @@
     <div class="help-item"><h3 data-i18n="tabStereogram">Стереограммы</h3><p data-i18n="helpStereogram">…</p></div>
     <div class="help-item"><h3 data-i18n="tabTracking">Слежение</h3><p data-i18n="helpTracking">…</p></div>
     <div class="help-item"><h3 data-i18n="tabRelax">Релаксация</h3><p data-i18n="helpRelax">…</p></div>
+    <div class="help-item"><h3 data-i18n="helpControlsTitle">Настройки и регуляторы</h3><p data-i18n="helpControls">…</p></div>
     <div class="help-item"><h3 data-i18n="helpAddTitle">Свои картинки</h3><p data-i18n="helpAdd">…</p></div>
   </div>
 </div>
@@ -515,11 +525,15 @@
       helpStereogram:'Очки не нужны. На экране — цветной шум, в котором спрятана объёмная фигура из ваших картинок. Смотрите «сквозь» экран или сведите глаза к носу, пока фигура не проступит. Регулируйте «Глубину», если видно плохо.',
       helpTracking:'Очки не нужны. Следите за движущейся целью только глазами, голову держите неподвижно. Режим «Вглубь» приближает и удаляет объект — это тренирует сведение глаз.',
       helpRelax:'Спокойные узоры для отдыха глаз в начале или конце занятия. Можно поставить таймер — в конце прозвучит мягкий сигнал.',
-      helpAddTitle:'Свои картинки', helpAdd:'Нажмите «+ Добавить» или перетащите файлы. Лучше всего работают рисунки с чётким контуром на прозрачном или белом фоне.',
+      helpAddTitle:'Свои картинки', helpAdd:'Картинки уже встроены — можно сразу тренироваться. Чтобы добавить свои: синяя кнопка «+ Добавить» в панели внизу (вкладка «Анаглиф», раздел «Картинки») или просто перетащите файлы в окно. Лучше всего работают рисунки с чётким контуром на прозрачном или белом фоне.',
       donateTitle:'Поддержать проект', donateSub:'Сайт бесплатный и без рекламы. Любая поддержка помогает его развивать.',
       donateMonoTitle:'monobank · банка (Украина)', donateMonoSub:'Отсканируйте QR в приложении банка или откройте ссылку', donateMonoBtn:'Открыть банку',
       donateKofiTitle:'Ko-fi (международная)', donateKofiSub:'Принимает карты со всего мира', donateKofiBtn:'Поддержать на Ko-fi',
       donateThanks:'Спасибо за поддержку! ♥',
+      readyBig:'Для начала тренировки установите время и нажмите запуск',
+      readySub:'Наденьте красно-синие очки, при необходимости настройте время и скорость в панели внизу.',
+      helpControlsTitle:'Настройки и регуляторы',
+      helpControls:'<b>Тип косоглазия</b> — направление движения слоёв (сходящееся: из центра к краям; расходящееся: к центру). <b>Характер движения</b> — равномерно (как в классике) или с плавным затуханием. <b>Скорость движения</b> — как быстро слои расходятся. <b>Масштаб</b> — размер картинки. <b>Размах расхождения</b> — насколько далеко слои уходят друг от друга. <b>Порог контура</b> — какие тёмные участки остаются чёрными (а не красятся); крутите, если картинка превращается в пятно или теряет детали. <b>Время на картинку</b> — через сколько секунд сменится. <b>Время сеанса</b> — общая длительность, в конце звучит сигнал. <b>Менять картинки автоматически</b> и <b>по порядку/случайно</b> — как листаются картинки. Кнопка смены цветов меняет красный и синий местами (если фузия не собирается). В стереограммах: <b>Глубина</b> — насколько выпуклой кажется фигура. В слежении: <b>Скорость</b> и <b>Размер цели</b>. В релаксации: <b>Тип узора</b> (Авто меняет сам каждые 30 с), <b>Скорость волн</b> и <b>Таймер</b>.',
     },
     uk:{
       appTitle:'Стереотренування', clkPicLbl:'картинка', clkSessionLbl:'сеанс',
@@ -552,11 +566,15 @@
       helpStereogram:'Окуляри не потрібні. На екрані — кольоровий шум, у якому захована обʼємна фігура з ваших картинок. Дивіться «крізь» екран або зведіть очі до носа, доки фігура не проступить. Регулюйте «Глибину», якщо видно погано.',
       helpTracking:'Окуляри не потрібні. Стежте за рухомою ціллю лише очима, голову тримайте нерухомо. Режим «Углиб» наближає й віддаляє обʼєкт — це тренує зведення очей.',
       helpRelax:'Спокійні візерунки для відпочинку очей на початку або наприкінці заняття. Можна поставити таймер — наприкінці пролунає мʼякий сигнал.',
-      helpAddTitle:'Свої картинки', helpAdd:'Натисніть «+ Додати» або перетягніть файли. Найкраще працюють малюнки з чітким контуром на прозорому чи білому тлі.',
+      helpAddTitle:'Свої картинки', helpAdd:'Картинки вже вбудовані — можна одразу тренуватися. Щоб додати свої: синя кнопка «+ Додати» у панелі внизу (вкладка «Анагліф», розділ «Картинки») або просто перетягніть файли у вікно. Найкраще працюють малюнки з чітким контуром на прозорому чи білому тлі.',
       donateTitle:'Підтримати проєкт', donateSub:'Сайт безкоштовний і без реклами. Будь-яка підтримка допомагає його розвивати.',
       donateMonoTitle:'monobank · банка (Україна)', donateMonoSub:'Відскануйте QR у застосунку банку або відкрийте посилання', donateMonoBtn:'Відкрити банку',
       donateKofiTitle:'Ko-fi (міжнародна)', donateKofiSub:'Приймає картки з усього світу', donateKofiBtn:'Підтримати на Ko-fi',
       donateThanks:'Дякую за підтримку! ♥',
+      readyBig:'Щоб почати тренування, встановіть час і натисніть запуск',
+      readySub:'Надягніть червоно-сині окуляри, за потреби налаштуйте час і швидкість у панелі внизу.',
+      helpControlsTitle:'Налаштування та регулятори',
+      helpControls:'<b>Тип косоокості</b> — напрямок руху шарів (збіжна: з центру до країв; розбіжна: до центру). <b>Характер руху</b> — рівномірно або з плавним загасанням. <b>Швидкість руху</b> — як швидко шари розходяться. <b>Масштаб</b> — розмір картинки. <b>Розмах розходження</b> — наскільки далеко шари розходяться. <b>Поріг контуру</b> — які темні ділянки лишаються чорними (а не фарбуються); крутіть, якщо картинка стає плямою або втрачає деталі. <b>Час на картинку</b> — за скільки секунд зміниться. <b>Час сеансу</b> — загальна тривалість, наприкінці лунає сигнал. <b>Змінювати автоматично</b> та <b>за порядком/випадково</b> — як гортаються картинки. Кнопка зміни кольорів міняє червоний і синій місцями (якщо фузія не збирається). У стереограмах: <b>Глибина</b> — наскільки опуклою здається фігура. У стеженні: <b>Швидкість</b> і <b>Розмір цілі</b>. У релаксації: <b>Тип візерунка</b> (Авто змінює сам кожні 30 с), <b>Швидкість хвиль</b> і <b>Таймер</b>.',
     },
     en:{
       appTitle:'Stereo Training', clkPicLbl:'image', clkSessionLbl:'session',
@@ -589,11 +607,15 @@
       helpStereogram:'No glasses needed. The screen shows colour noise hiding a 3D shape made from your images. Look “through” the screen or cross your eyes until the shape appears. Adjust “Depth” if it’s hard to see.',
       helpTracking:'No glasses needed. Follow the moving target with your eyes only, keep your head still. The “Depth” mode moves the object closer and farther — this trains eye convergence.',
       helpRelax:'Calm patterns to rest the eyes at the start or end of a session. Set a timer — a soft chime plays at the end.',
-      helpAddTitle:'Your own images', helpAdd:'Click “+ Add” or drag files in. Drawings with a clear outline on a transparent or white background work best.',
+      helpAddTitle:'Your own images', helpAdd:'Images are already built in — you can train right away. To add your own: the blue “+ Add” button in the panel below (Anaglyph tab, Images section) or just drag files into the window. Drawings with a clear outline on a transparent or white background work best.',
       donateTitle:'Support the project', donateSub:'The site is free and ad-free. Any support helps it grow.',
       donateMonoTitle:'monobank · jar (Ukraine)', donateMonoSub:'Scan the QR in your bank app or open the link', donateMonoBtn:'Open the jar',
       donateKofiTitle:'Ko-fi (international)', donateKofiSub:'Accepts cards worldwide', donateKofiBtn:'Support on Ko-fi',
       donateThanks:'Thank you for your support! ♥',
+      readyBig:'To start training, set the time and press play',
+      readySub:'Put on red-blue glasses; adjust time and speed in the panel below if needed.',
+      helpControlsTitle:'Settings and sliders',
+      helpControls:'<b>Strabismus type</b> — direction the layers move (convergent: centre to edges; divergent: toward centre). <b>Motion style</b> — uniform or with smooth ease-out. <b>Motion speed</b> — how fast the layers separate. <b>Scale</b> — image size. <b>Separation range</b> — how far the layers move apart. <b>Outline threshold</b> — which dark areas stay black (instead of being coloured); adjust if the image turns into a blob or loses detail. <b>Time per image</b> — when it switches. <b>Session time</b> — total length; a chime plays at the end. <b>Change automatically</b> and <b>in order/random</b> — how images cycle. The swap-colours button swaps red and blue (if fusion won’t form). In stereograms: <b>Depth</b> — how raised the shape looks. In tracking: <b>Speed</b> and <b>Target size</b>. In relaxation: <b>Pattern type</b> (Auto changes every 30 s), <b>Wave speed</b> and <b>Timer</b>.',
     },
     es:{
       appTitle:'Entrenamiento estéreo', clkPicLbl:'imagen', clkSessionLbl:'sesión',
@@ -626,11 +648,15 @@
       helpStereogram:'No se necesitan gafas. La pantalla muestra ruido de color que oculta una figura 3D de tus imágenes. Mira «a través» de la pantalla o cruza los ojos hasta que aparezca. Ajusta «Profundidad» si cuesta verla.',
       helpTracking:'No se necesitan gafas. Sigue el objetivo en movimiento solo con los ojos, mantén la cabeza quieta. El modo «Profundidad» acerca y aleja el objeto — entrena la convergencia ocular.',
       helpRelax:'Patrones tranquilos para descansar los ojos al inicio o al final de la sesión. Pon un temporizador — sonará un suave aviso al terminar.',
-      helpAddTitle:'Tus imágenes', helpAdd:'Pulsa «+ Añadir» o arrastra archivos. Funcionan mejor los dibujos con contorno claro sobre fondo transparente o blanco.',
+      helpAddTitle:'Tus imágenes', helpAdd:'Las imágenes ya vienen incluidas — puedes entrenar de inmediato. Para añadir las tuyas: el botón azul «+ Añadir» en el panel inferior (pestaña Anaglifo, sección Imágenes) o arrastra archivos a la ventana. Funcionan mejor los dibujos con contorno claro sobre fondo transparente o blanco.',
       donateTitle:'Apoyar el proyecto', donateSub:'El sitio es gratuito y sin anuncios. Cualquier apoyo ayuda a mejorarlo.',
       donateMonoTitle:'monobank · jar (Ucrania)', donateMonoSub:'Escanea el QR en tu app bancaria o abre el enlace', donateMonoBtn:'Abrir la jar',
       donateKofiTitle:'Ko-fi (internacional)', donateKofiSub:'Acepta tarjetas de todo el mundo', donateKofiBtn:'Apoyar en Ko-fi',
       donateThanks:'¡Gracias por tu apoyo! ♥',
+      readyBig:'Para empezar, ajusta el tiempo y pulsa play',
+      readySub:'Ponte las gafas rojo-azul; ajusta el tiempo y la velocidad en el panel inferior si hace falta.',
+      helpControlsTitle:'Ajustes y controles',
+      helpControls:'<b>Tipo de estrabismo</b> — dirección del movimiento de las capas (convergente: del centro a los bordes; divergente: hacia el centro). <b>Tipo de movimiento</b> — uniforme o con frenado suave. <b>Velocidad de movimiento</b> — qué tan rápido se separan las capas. <b>Escala</b> — tamaño de la imagen. <b>Rango de separación</b> — cuánto se alejan las capas. <b>Umbral de contorno</b> — qué zonas oscuras quedan en negro (en vez de colorearse); ajústalo si la imagen se vuelve una mancha o pierde detalle. <b>Tiempo por imagen</b> — cuándo cambia. <b>Tiempo de sesión</b> — duración total; suena un aviso al final. <b>Cambiar automáticamente</b> y <b>en orden/aleatorio</b> — cómo rotan las imágenes. El botón de cambiar colores intercambia rojo y azul (si no se forma la fusión). En estereogramas: <b>Profundidad</b> — cuánto resalta la figura. En seguimiento: <b>Velocidad</b> y <b>Tamaño del objetivo</b>. En relajación: <b>Tipo de patrón</b> (Auto cambia cada 30 s), <b>Velocidad de ondas</b> y <b>Temporizador</b>.',
     },
     de:{
       appTitle:'Stereo-Training', clkPicLbl:'Bild', clkSessionLbl:'Sitzung',
@@ -663,11 +689,15 @@
       helpStereogram:'Keine Brille nötig. Der Bildschirm zeigt Farbrauschen, in dem eine 3D-Figur aus deinen Bildern verborgen ist. Schaue „durch“ den Bildschirm oder kreuze die Augen, bis die Figur erscheint. Stelle „Tiefe“ ein, falls es schwer zu sehen ist.',
       helpTracking:'Keine Brille nötig. Folge dem bewegten Ziel nur mit den Augen, halte den Kopf still. Der Modus „In die Tiefe“ bewegt das Objekt näher und ferner — das trainiert die Konvergenz.',
       helpRelax:'Ruhige Muster zur Entspannung der Augen zu Beginn oder am Ende der Sitzung. Stelle einen Timer — am Ende ertönt ein sanfter Ton.',
-      helpAddTitle:'Eigene Bilder', helpAdd:'Klicke „+ Hinzufügen“ oder ziehe Dateien hinein. Am besten funktionieren Zeichnungen mit klarem Umriss auf transparentem oder weißem Hintergrund.',
+      helpAddTitle:'Eigene Bilder', helpAdd:'Bilder sind bereits integriert — du kannst sofort trainieren. Um eigene hinzuzufügen: der blaue „+ Hinzufügen“-Knopf im Panel unten (Tab Anaglyph, Abschnitt Bilder) oder ziehe Dateien ins Fenster. Am besten funktionieren Zeichnungen mit klarem Umriss auf transparentem oder weißem Hintergrund.',
       donateTitle:'Projekt unterstützen', donateSub:'Die Seite ist kostenlos und werbefrei. Jede Unterstützung hilft bei der Weiterentwicklung.',
       donateMonoTitle:'monobank · Jar (Ukraine)', donateMonoSub:'Scanne den QR in deiner Bank-App oder öffne den Link', donateMonoBtn:'Jar öffnen',
       donateKofiTitle:'Ko-fi (international)', donateKofiSub:'Akzeptiert Karten weltweit', donateKofiBtn:'Auf Ko-fi unterstützen',
       donateThanks:'Danke für deine Unterstützung! ♥',
+      readyBig:'Zum Starten die Zeit einstellen und auf Play drücken',
+      readySub:'Setze die Rot-Blau-Brille auf; passe bei Bedarf Zeit und Tempo im Panel unten an.',
+      helpControlsTitle:'Einstellungen und Regler',
+      helpControls:'<b>Schielform</b> — Bewegungsrichtung der Ebenen (konvergent: Mitte zu den Rändern; divergent: zur Mitte). <b>Bewegungsart</b> — gleichmäßig oder mit sanftem Auslauf. <b>Bewegungstempo</b> — wie schnell sich die Ebenen trennen. <b>Größe</b> — Bildgröße. <b>Trennungsbereich</b> — wie weit sich die Ebenen entfernen. <b>Konturschwelle</b> — welche dunklen Bereiche schwarz bleiben (statt gefärbt zu werden); anpassen, wenn das Bild zum Fleck wird oder Details verliert. <b>Zeit pro Bild</b> — wann gewechselt wird. <b>Sitzungsdauer</b> — Gesamtdauer; am Ende ertönt ein Ton. <b>Automatisch wechseln</b> und <b>der Reihe nach/zufällig</b> — wie Bilder durchlaufen. Die Farbtausch-Taste vertauscht Rot und Blau (falls keine Fusion entsteht). Bei Stereogrammen: <b>Tiefe</b> — wie erhaben die Figur wirkt. Bei Verfolgung: <b>Tempo</b> und <b>Zielgröße</b>. Bei Entspannung: <b>Mustertyp</b> (Auto wechselt alle 30 s), <b>Wellentempo</b> und <b>Timer</b>.',
     },
   };
   let LANG='ru';
@@ -702,13 +732,13 @@
     tab:'anaglyph',
     squint:'converging', playing:false,
     speed:.2, scale:1, gap:.6, thr:.35, swap:false, ease:'linear',
-    autoChange:true, order:'order',
+    autoChange:true, order:'random',
     picDur:15, sessionMin:10,
     images:[], idx:-1,
     phase:0,
     picRemaining:15, sessionRemaining:600,
     lastTs:0,
-    sg:{shape:'png',depth:.5,order:'order'},
+    sg:{shape:'png',depth:.5,order:'random'},
     tr:{playing:false,path:'horizontal',speed:.4,size:.5,t:0},
     rx:{playing:false,speed:.5,t:0,type:'auto',activeType:'rings',
         autoTimer:0, typeRemaining:30, timerMin:5, remaining:300},
@@ -1066,6 +1096,7 @@
     S.playing=p;
     if(p && S.sessionRemaining<=0) S.sessionRemaining=S.sessionMin*60;
     if(p && S.picRemaining<=0) S.picRemaining=S.picDur;
+    if(p) $('dropHint').classList.add('hide');   // спрятать приглашение при запуске
     $('playIcon').innerHTML=p?'<rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/>':'<path d="M8 5v14l11-7z"/>';
     updateClocks();
   }
@@ -1099,8 +1130,11 @@
       for(const name of list){ await addImageUrl('images/'+name, name); }
       if(S.images.length){
         setIdx(0); renderThumbs(); updateSgCount();
-        $('dropHint').classList.add('hide');
-        syncAnaglyphTimers();      // таймеры готовы, но не стартуем — ждём нажатия Пуск
+        // показываем приглашение «установите время и запуск», картинка ждёт на паузе
+        $('hintEmpty').style.display='none';
+        $('hintReady').style.display='flex';
+        $('dropHint').classList.remove('hide');
+        syncAnaglyphTimers();
         updateClocks();
         return true;
       }
@@ -1192,7 +1226,12 @@
       document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
       $('pane-'+b.dataset.tab).classList.add('active');
       S.tab=b.dataset.tab;
-      $('dropHint').style.display=(S.tab==='anaglyph'&&S.images.length===0)?'flex':'none';
+      // dropHint только на анаглифе и только пока не запущено
+      if(S.tab==='anaglyph'){
+        $('dropHint').style.display='';
+      } else {
+        $('dropHint').style.display='none';
+      }
       if(S.tab==='stereogram')genStereogram();
       updateClocks();
     };
