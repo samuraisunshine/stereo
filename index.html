@@ -67,11 +67,18 @@
   #statusbar .clock small{color:var(--ink-dim);font-size:11px}
 
   #dropHint{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-    gap:18px;color:var(--ink-dim);text-align:center;padding:24px;z-index:3}
+    gap:18px;color:var(--ink-dim);text-align:center;padding:24px;z-index:3;
+    background:radial-gradient(120% 100% at 50% 50%, rgba(8,10,16,.55) 0%, rgba(8,10,16,.82) 100%);
+    backdrop-filter:blur(2px)}
   #dropHint .big{font-size:19px;color:var(--ink);font-weight:600}
   #dropHint .sub{font-size:14px;max-width:440px;line-height:1.5}
   #dropHint.hide{display:none}
-  #dropHint #hintEmpty,#dropHint #hintReady{display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+  #dropHint #hintEmpty,#dropHint #hintReady{display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center;
+    background:rgba(16,19,28,.72);border:1px solid var(--panel-edge);border-radius:18px;padding:30px 34px;max-width:520px;
+    box-shadow:0 20px 60px rgba(0,0,0,.45)}
+  #dropHint #hintReady .start-cta{margin-top:4px;display:flex;align-items:center;gap:10px;
+    background:var(--accent);color:#fff;border:none;border-radius:12px;padding:13px 28px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s}
+  #dropHint #hintReady .start-cta:hover{background:#4a7ad8;transform:translateY(-1px)}
   .ghost-btn{border:1px solid var(--panel-edge);background:var(--panel);color:var(--ink);
     padding:11px 20px;border-radius:var(--r);font-size:14px;cursor:pointer;transition:.2s}
   .ghost-btn:hover{border-color:var(--accent);background:var(--accent-soft)}
@@ -180,6 +187,7 @@
     <div id="hintReady" style="display:none">
       <div class="big" data-i18n="readyBig">Для начала тренировки установите время и нажмите запуск</div>
       <div class="sub" data-i18n="readySub">Наденьте красно-синие очки, при необходимости настройте время и скорость в панели внизу.</div>
+      <button class="start-cta" id="startCta" data-i18n="readyStart">▶ Запуск</button>
     </div>
   </div>
 
@@ -531,6 +539,7 @@
       donateKofiTitle:'Ko-fi (международная)', donateKofiSub:'Принимает карты со всего мира', donateKofiBtn:'Поддержать на Ko-fi',
       donateThanks:'Спасибо за поддержку! ♥',
       readyBig:'Для начала тренировки установите время и нажмите запуск',
+      readyStart:'▶ Запуск',
       readySub:'Наденьте красно-синие очки, при необходимости настройте время и скорость в панели внизу.',
       helpControlsTitle:'Настройки и регуляторы',
       helpControls:'<b>Тип косоглазия</b> — направление движения слоёв (сходящееся: из центра к краям; расходящееся: к центру). <b>Характер движения</b> — равномерно (как в классике) или с плавным затуханием. <b>Скорость движения</b> — как быстро слои расходятся. <b>Масштаб</b> — размер картинки. <b>Размах расхождения</b> — насколько далеко слои уходят друг от друга. <b>Порог контура</b> — какие тёмные участки остаются чёрными (а не красятся); крутите, если картинка превращается в пятно или теряет детали. <b>Время на картинку</b> — через сколько секунд сменится. <b>Время сеанса</b> — общая длительность, в конце звучит сигнал. <b>Менять картинки автоматически</b> и <b>по порядку/случайно</b> — как листаются картинки. Кнопка смены цветов меняет красный и синий местами (если фузия не собирается). В стереограммах: <b>Глубина</b> — насколько выпуклой кажется фигура. В слежении: <b>Скорость</b> и <b>Размер цели</b>. В релаксации: <b>Тип узора</b> (Авто меняет сам каждые 30 с), <b>Скорость волн</b> и <b>Таймер</b>.',
@@ -572,6 +581,7 @@
       donateKofiTitle:'Ko-fi (міжнародна)', donateKofiSub:'Приймає картки з усього світу', donateKofiBtn:'Підтримати на Ko-fi',
       donateThanks:'Дякую за підтримку! ♥',
       readyBig:'Щоб почати тренування, встановіть час і натисніть запуск',
+      readyStart:'▶ Запуск',
       readySub:'Надягніть червоно-сині окуляри, за потреби налаштуйте час і швидкість у панелі внизу.',
       helpControlsTitle:'Налаштування та регулятори',
       helpControls:'<b>Тип косоокості</b> — напрямок руху шарів (збіжна: з центру до країв; розбіжна: до центру). <b>Характер руху</b> — рівномірно або з плавним загасанням. <b>Швидкість руху</b> — як швидко шари розходяться. <b>Масштаб</b> — розмір картинки. <b>Розмах розходження</b> — наскільки далеко шари розходяться. <b>Поріг контуру</b> — які темні ділянки лишаються чорними (а не фарбуються); крутіть, якщо картинка стає плямою або втрачає деталі. <b>Час на картинку</b> — за скільки секунд зміниться. <b>Час сеансу</b> — загальна тривалість, наприкінці лунає сигнал. <b>Змінювати автоматично</b> та <b>за порядком/випадково</b> — як гортаються картинки. Кнопка зміни кольорів міняє червоний і синій місцями (якщо фузія не збирається). У стереограмах: <b>Глибина</b> — наскільки опуклою здається фігура. У стеженні: <b>Швидкість</b> і <b>Розмір цілі</b>. У релаксації: <b>Тип візерунка</b> (Авто змінює сам кожні 30 с), <b>Швидкість хвиль</b> і <b>Таймер</b>.',
@@ -613,6 +623,7 @@
       donateKofiTitle:'Ko-fi (international)', donateKofiSub:'Accepts cards worldwide', donateKofiBtn:'Support on Ko-fi',
       donateThanks:'Thank you for your support! ♥',
       readyBig:'To start training, set the time and press play',
+      readyStart:'▶ Start',
       readySub:'Put on red-blue glasses; adjust time and speed in the panel below if needed.',
       helpControlsTitle:'Settings and sliders',
       helpControls:'<b>Strabismus type</b> — direction the layers move (convergent: centre to edges; divergent: toward centre). <b>Motion style</b> — uniform or with smooth ease-out. <b>Motion speed</b> — how fast the layers separate. <b>Scale</b> — image size. <b>Separation range</b> — how far the layers move apart. <b>Outline threshold</b> — which dark areas stay black (instead of being coloured); adjust if the image turns into a blob or loses detail. <b>Time per image</b> — when it switches. <b>Session time</b> — total length; a chime plays at the end. <b>Change automatically</b> and <b>in order/random</b> — how images cycle. The swap-colours button swaps red and blue (if fusion won’t form). In stereograms: <b>Depth</b> — how raised the shape looks. In tracking: <b>Speed</b> and <b>Target size</b>. In relaxation: <b>Pattern type</b> (Auto changes every 30 s), <b>Wave speed</b> and <b>Timer</b>.',
@@ -654,6 +665,7 @@
       donateKofiTitle:'Ko-fi (internacional)', donateKofiSub:'Acepta tarjetas de todo el mundo', donateKofiBtn:'Apoyar en Ko-fi',
       donateThanks:'¡Gracias por tu apoyo! ♥',
       readyBig:'Para empezar, ajusta el tiempo y pulsa play',
+      readyStart:'▶ Iniciar',
       readySub:'Ponte las gafas rojo-azul; ajusta el tiempo y la velocidad en el panel inferior si hace falta.',
       helpControlsTitle:'Ajustes y controles',
       helpControls:'<b>Tipo de estrabismo</b> — dirección del movimiento de las capas (convergente: del centro a los bordes; divergente: hacia el centro). <b>Tipo de movimiento</b> — uniforme o con frenado suave. <b>Velocidad de movimiento</b> — qué tan rápido se separan las capas. <b>Escala</b> — tamaño de la imagen. <b>Rango de separación</b> — cuánto se alejan las capas. <b>Umbral de contorno</b> — qué zonas oscuras quedan en negro (en vez de colorearse); ajústalo si la imagen se vuelve una mancha o pierde detalle. <b>Tiempo por imagen</b> — cuándo cambia. <b>Tiempo de sesión</b> — duración total; suena un aviso al final. <b>Cambiar automáticamente</b> y <b>en orden/aleatorio</b> — cómo rotan las imágenes. El botón de cambiar colores intercambia rojo y azul (si no se forma la fusión). En estereogramas: <b>Profundidad</b> — cuánto resalta la figura. En seguimiento: <b>Velocidad</b> y <b>Tamaño del objetivo</b>. En relajación: <b>Tipo de patrón</b> (Auto cambia cada 30 s), <b>Velocidad de ondas</b> y <b>Temporizador</b>.',
@@ -695,6 +707,7 @@
       donateKofiTitle:'Ko-fi (international)', donateKofiSub:'Akzeptiert Karten weltweit', donateKofiBtn:'Auf Ko-fi unterstützen',
       donateThanks:'Danke für deine Unterstützung! ♥',
       readyBig:'Zum Starten die Zeit einstellen und auf Play drücken',
+      readyStart:'▶ Start',
       readySub:'Setze die Rot-Blau-Brille auf; passe bei Bedarf Zeit und Tempo im Panel unten an.',
       helpControlsTitle:'Einstellungen und Regler',
       helpControls:'<b>Schielform</b> — Bewegungsrichtung der Ebenen (konvergent: Mitte zu den Rändern; divergent: zur Mitte). <b>Bewegungsart</b> — gleichmäßig oder mit sanftem Auslauf. <b>Bewegungstempo</b> — wie schnell sich die Ebenen trennen. <b>Größe</b> — Bildgröße. <b>Trennungsbereich</b> — wie weit sich die Ebenen entfernen. <b>Konturschwelle</b> — welche dunklen Bereiche schwarz bleiben (statt gefärbt zu werden); anpassen, wenn das Bild zum Fleck wird oder Details verliert. <b>Zeit pro Bild</b> — wann gewechselt wird. <b>Sitzungsdauer</b> — Gesamtdauer; am Ende ertönt ein Ton. <b>Automatisch wechseln</b> und <b>der Reihe nach/zufällig</b> — wie Bilder durchlaufen. Die Farbtausch-Taste vertauscht Rot und Blau (falls keine Fusion entsteht). Bei Stereogrammen: <b>Tiefe</b> — wie erhaben die Figur wirkt. Bei Verfolgung: <b>Tempo</b> und <b>Zielgröße</b>. Bei Entspannung: <b>Mustertyp</b> (Auto wechselt alle 30 s), <b>Wellentempo</b> und <b>Timer</b>.',
@@ -799,7 +812,8 @@
     const cx=DIM.w/2, cy=DIM.h/2;
     const maxSep=DIM.w*0.34*S.gap;
 
-    const p=S.phase;
+    // на паузе показываем слои в среднем разведении (видна анаглиф-пара, а не «красный призрак»)
+    const p = S.playing ? S.phase : 0.5;
     const eased = S.ease==='easeout' ? (1-Math.pow(1-p,2)) : p;
 
     let sepNorm;
@@ -1181,6 +1195,7 @@
   bindSeg('segEase',v=>S.ease=v);
 
   $('btnPlay').onclick=()=>setPlaying(!S.playing);
+  $('startCta').onclick=()=>setPlaying(true);
   $('btnNext').onclick=()=>{nextPic();S.picRemaining=S.picDur;};
   $('btnSwap').onclick=()=>{S.swap=!S.swap;$('btnSwap').classList.toggle('active',S.swap);
     const g=$('glassesPrev').children;g[0].style.background=S.swap?'var(--blue)':'var(--red)';g[2].style.background=S.swap?'var(--red)':'var(--blue)';};
